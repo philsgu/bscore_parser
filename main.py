@@ -11,7 +11,7 @@ if choice == "Home":
   local_time = time.localtime() 
   time_string = time.strftime("%m/%d/%Y", local_time)
 
-  """
+  f"""
   # EXTRACT AAMC ERAS BOARD SCORES
   This beta web app is intended for U.S. residency programs to quickly determine TOTAL FAIL attempts on either USMLE
   or COMLEX board examinations.  Unfortunately, current ERAS only posts PASS board scores into the applicant's
@@ -23,13 +23,23 @@ if choice == "Home":
   interview and ranking decisions.
 
   &#8594Select from the **left menu option** USMLE/COMLEX to parse PDF(s). 
-  """
-  st.write("#")
-  st.write("#")
-
-  f"""
-  Developed and created by [Phillip Kim, MD, MPH](https://www.doximity.com/pub/phillip-kim-md-8dccc4e4)  \n
-  For documentation and contribution details are at [GitHub Repository](https://github.com/philsgu/bscore_parser.git)  \nLast update: {time_string}
+  #
+  ### What does the Web App do? 
+  Allows residency programs to upload Board PDFs and receive CSV file output of Fails
+  ### Is my data safe? 
+  Yes, it is a front end web app without any server sided data collection.  Allows upload, parse, and download sequentially
+  ### How is this Web App useful?
+  Sole purpose is to reduce burden of manually counting from PDFs any Fail attempts by residency programs
+  ### Is there a guarantee that the Web App is 100% accurate in parsing the PDFs? 
+  No, the Web App is only a tool and it is up to the program/individual to cross check the CSV output for any inaccuracies
+  ### Is this free? 
+  Yes, no strings attached.  Developed by a physician involved in resident recruitment.  
+  ### Will there be any updates?
+  Based on changes in USMLE/COMLEX reporting PDF formats, parsing techniques will need to be adjusted.  
+  #
+  #
+  Developed and created by [Phillip Kim, MD, MPH](https://www.doximity.com/pub/phillip-kim-md-8dccc4e4)  \nFor documentation 
+  and contribution details are at [GitHub Repository](https://github.com/philsgu/bscore_parser.git)  \nLast update: {time_string}
   """
  
 
