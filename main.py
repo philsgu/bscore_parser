@@ -6,12 +6,6 @@ import glob
 import time 
 import plotly.express as px
 
-# def main():
-#   menu = ["Home", "USMLE", "COMLEX", "About"]
-#   choice = st.sidebar.selectbox("Menu", menu)
-
-#   if choice == 'Home':
-
 choice = st.sidebar.selectbox("Please select", ("Home", "USMLE/COMLEX"))
 
 if choice == "Home":
@@ -36,7 +30,7 @@ if choice == "Home":
 
   f"""
   Developed and created by [Phillip Kim, MD, MPH](https://www.doximity.com/pub/phillip-kim-md-8dccc4e4)  \n
-  For documentation and contribution details are at [GitHub Repository].  \nLast update: {time_string}
+  For documentation and contribution details are at [GitHub Repository](https://github.com/philsgu/bscore_parser.git)  \nLast update: {time_string}
   """
  
 
