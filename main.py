@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import re
 import pdfplumber as pf
-import glob
 import time 
 import plotly.express as px
 
