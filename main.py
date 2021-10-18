@@ -79,7 +79,7 @@ if choice == "USMLE/COMLEX":
       return "".join(num)
   
     
-  upload_files = st.file_uploader("Choose PDF files to upload (Shift-Click for multiples)", accept_multiple_files=True, type=['pdf'], key=st.session_state.key, help="Repeat if cache error")
+  upload_files = st.file_uploader("Choose PDF files to upload (Shift-Click for multiples)", accept_multiple_files=True, type=['pdf'], key=st.session_state.key, help="Rerun if cache error")
   st.write('Total files uploaded: ' + str(len(upload_files)))
   # for f in upload_files: 
   #   st.write(str(f).split(','))
