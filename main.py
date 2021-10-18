@@ -94,10 +94,16 @@ if choice == "USMLE/COMLEX":
   if upload_files is not None:
     
     df = pd.DataFrame(columns = ['Applicant ID', 'Total USMLE Fails', 'Total COMLEX Fails'])
+    status = []
 
-    if st.button ("Analyze"):
+    if st.button ("Analyze") and len(upload_files) > 0:
       latest_iteration = st.text('hang on...')
       my_bar = st.progress(0)
+      for percent_complete in range(100):
+        time.sleep(0.05)
+        latest_iteration.text(f'{percent_complete + 1}%')
+        my_bar.progress(percent_complete + 1)
+
       for file in upload_files: 
         with pf.open(file) as pdf:
           page = pdf.pages[0]
@@ -111,51 +117,52 @@ if choice == "USMLE/COMLEX":
               cfail_list = comlex_fail.findall(text_data)
               if cfail_list:
                 df = df.append({'Applicant ID': ctext_list[0], 'Total COMLEX Fails': len(cfail_list)}, ignore_index=True)   
-          else: 
+          elif "USMLE" in text_data: 
               utext_list = text_data.split('USMLE')
               ufail_list = usmle_fail.findall(text_data)
               if ufail_list:
                 df = df.append({'Applicant ID': utext_list[0], 'Total USMLE Fails': len(ufail_list)}, ignore_index=True)
+          else:
+              status.append(str(file))
 
-      for percent_complete in range(100):
-        time.sleep(0.05)
-        latest_iteration.text(f'{percent_complete + 1}%')
-        my_bar.progress(percent_complete + 1)
+      csv = convert_df(df)
+      if not df.empty: 
+         #df.drop_duplicates(keep=False, inplace=True)
+        aamc_id = df['Applicant ID'].apply(lambda x: find_num(x))
+        df.insert(1, "AAMC ID", aamc_id)
 
-      if df.empty:
-        st.write ('No Failed Applicant(s)')   
-     
-    #df.drop_duplicates(keep=False, inplace=True)
-    aamc_id = df['Applicant ID'].apply(lambda x: find_num(x))
-    df.insert(1, "AAMC ID", aamc_id)
+        st.markdown(f"Total applicants with 1 or more FAILED USMLE/COMLEX attempts: **{str(df.shape[0])}**")
 
-    csv = convert_df(df)
-    if not df.empty: 
-      st.write("Total applicants with 1 or more FAILED USMLE/COMLEX attempts: " + str(df.shape[0]))
-
-      usmle_histo = px.histogram(
-        df, x=['Total USMLE Fails', 'Total COMLEX Fails'], cumulative=False, 
-        labels={
-        "value": "Fail Attempts",
-        "variable": "Types"
-        },
-        title = 'USMLE/COMLEX',
-      )
-      usmle_histo.update_xaxes(type='category')
-      usmle_histo.update_layout(title_x=0.5)
-      st.plotly_chart(usmle_histo)
-      
-      st.download_button(
-        label='Download CSV file', 
-        data = csv, 
-        mime='text/csv', 
-        file_name ='failed_applicants.csv'
+        usmle_histo = px.histogram(
+          df, x=['Total USMLE Fails', 'Total COMLEX Fails'], cumulative=False, 
+          labels={
+          "value": "Fail Attempts",
+          "variable": "Types"
+          },
+          title = 'USMLE/COMLEX',
         )
+        usmle_histo.update_xaxes(type='category')
+        usmle_histo.update_layout(title_x=0.5)
+        st.plotly_chart(usmle_histo)
+        
+        st.download_button(
+          label='Download CSV file', 
+          data = csv, 
+          mime='text/csv', 
+          file_name ='failed_applicants.csv'
+          )
+      else:
+        st.markdown(f"Total applicants with 1 or more FAILED USMLE/COMLEX attempts: **{str(df.shape[0])}**")
+    
+    if status:
+      st.warning(f'The following PDFs were deemed indeterminate: {status}') 
+
+    
       
-  if st.button('Clear Uploaded File(s)'):
+  if st.button('Clear Uploaded File(s)', help='click twice to clear ALL'):
     for key in st.session_state.keys():
         del st.session_state[key] 
-
+        
   #st.session_state
 
 
