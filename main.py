@@ -10,7 +10,7 @@ from random import randint
 choice = st.sidebar.selectbox("Please select", ("Home", "USMLE/COMLEX"))
 
 if 'key' not in st.session_state:
-    st.session_state.key = str(randint(1000, 100000000))
+  st.session_state.key = str(randint(1000, 100000000))
 
 if choice == "Home":
   local_time = time.localtime() 
@@ -79,7 +79,7 @@ if choice == "USMLE/COMLEX":
       return "".join(num)
   
     
-  upload_files = st.file_uploader("Choose PDF files to upload (Shift-Click for multiples)", accept_multiple_files=True, type=['pdf'], key=st.session_state.key)
+  upload_files = st.file_uploader("Choose PDF files to upload (Shift-Click for multiples)", accept_multiple_files=True, type=['pdf'], key=st.session_state.key, help="Repeat if cache error")
   st.write('Total files uploaded: ' + str(len(upload_files)))
   # for f in upload_files: 
   #   st.write(str(f).split(','))
@@ -125,14 +125,13 @@ if choice == "USMLE/COMLEX":
           else:
               status.append(str(file))
 
+      #df.drop_duplicates(keep=False, inplace=True)
+      aamc_id = df['Applicant ID'].apply(lambda x: find_num(x))
+      df.insert(1, "AAMC ID", aamc_id)
+
       csv = convert_df(df)
       if not df.empty: 
-         #df.drop_duplicates(keep=False, inplace=True)
-        aamc_id = df['Applicant ID'].apply(lambda x: find_num(x))
-        df.insert(1, "AAMC ID", aamc_id)
-
         st.markdown(f"Total applicants with 1 or more FAILED USMLE/COMLEX attempts: **{str(df.shape[0])}**")
-
         usmle_histo = px.histogram(
           df, x=['Total USMLE Fails', 'Total COMLEX Fails'], cumulative=False, 
           labels={
@@ -155,14 +154,15 @@ if choice == "USMLE/COMLEX":
         st.markdown(f"Total applicants with 1 or more FAILED USMLE/COMLEX attempts: **{str(df.shape[0])}**")
     
     if status:
-      st.warning(f'The following PDFs were deemed indeterminate: {status}') 
-
-    
+      st.warning(f'The following PDFs were deemed indeterminate: {status}')    
       
   if st.button('Clear Uploaded File(s)', help='click twice to clear ALL'):
     for key in st.session_state.keys():
-        del st.session_state[key] 
-        
+      
+      del st.session_state[key] 
+
+
+  
   #st.session_state
 
 
