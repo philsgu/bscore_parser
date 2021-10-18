@@ -4,8 +4,13 @@ import re
 import pdfplumber as pf
 import time 
 import plotly.express as px
+from random import randint
+
 
 choice = st.sidebar.selectbox("Please select", ("Home", "USMLE/COMLEX"))
+
+if 'key' not in st.session_state:
+    st.session_state.key = str(randint(1000, 100000000))
 
 if choice == "Home":
   local_time = time.localtime() 
@@ -72,12 +77,22 @@ if choice == "USMLE/COMLEX":
   def find_num(text):
       num = re.findall(r'[0-9]+', text)
       return "".join(num)
-
-  upload_files = st.file_uploader("Choose PDF files to upload (Shift-Click for multiples)", accept_multiple_files=True, type=['pdf'])
+  
+    
+  upload_files = st.file_uploader("Choose PDF files to upload (Shift-Click for multiples)", accept_multiple_files=True, type=['pdf'], key=st.session_state.key)
   st.write('Total files uploaded: ' + str(len(upload_files)))
+  # for f in upload_files: 
+  #   st.write(str(f).split(','))
+
+  #look for duplicate files
+  duplicates = [str(dfile).split(',')[1] for dfile in upload_files]
+  if len (duplicates) != len(set(duplicates)):
+    st.warning(f"Duplicate file(s) {set(duplicates)} uploaded. ERROR in analysis will be encountered!")
+
+  
 
   if upload_files is not None:
-
+    
     df = pd.DataFrame(columns = ['Applicant ID', 'Total USMLE Fails', 'Total COMLEX Fails'])
 
     if st.button ("Analyze"):
@@ -108,22 +123,16 @@ if choice == "USMLE/COMLEX":
         my_bar.progress(percent_complete + 1)
 
       if df.empty:
-        st.write ('No Failed Applicant(s)')     
-        
-    
-    df.drop_duplicates(keep=False, inplace=True)
+        st.write ('No Failed Applicant(s)')   
+     
+    #df.drop_duplicates(keep=False, inplace=True)
     aamc_id = df['Applicant ID'].apply(lambda x: find_num(x))
     df.insert(1, "AAMC ID", aamc_id)
 
     csv = convert_df(df)
-    if not df.empty:
+    if not df.empty: 
       st.write("Total applicants with 1 or more FAILED USMLE/COMLEX attempts: " + str(df.shape[0]))
-      st.download_button(
-        label='Download CSV file', 
-        data = csv, 
-        mime='text/csv', 
-        file_name ='failed_applicants.csv'
-        )
+
       usmle_histo = px.histogram(
         df, x=['Total USMLE Fails', 'Total COMLEX Fails'], cumulative=False, 
         labels={
@@ -135,7 +144,19 @@ if choice == "USMLE/COMLEX":
       usmle_histo.update_xaxes(type='category')
       usmle_histo.update_layout(title_x=0.5)
       st.plotly_chart(usmle_histo)
-    
+      
+      st.download_button(
+        label='Download CSV file', 
+        data = csv, 
+        mime='text/csv', 
+        file_name ='failed_applicants.csv'
+        )
+      
+  if st.button('Clear Uploaded File(s)'):
+    for key in st.session_state.keys():
+        del st.session_state[key] 
+
+  #st.session_state
 
 
 
