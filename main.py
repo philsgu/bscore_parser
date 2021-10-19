@@ -13,8 +13,8 @@ if 'key' not in st.session_state:
   st.session_state.key = str(randint(1000, 100000000))
 
 if choice == "Home":
-  local_time = time.localtime() 
-  time_string = time.strftime("%m/%d/%Y", local_time)
+  
+  time_string = '10/19/2021'
 
   f"""
   # EXTRACT AAMC ERAS BOARD SCORES
@@ -49,9 +49,11 @@ if choice == "Home":
  
 
 if choice == "USMLE/COMLEX":
+
+  st.info("This is a beta web app to upload and receive in CSV file for total FAILS per applicant. Please NOTE that NO data is saved into any cloud platforms or into Streamlit servers. It is at your discretion to save output file locally once parsing is completed.")
   """
   # USMLE/COMLEX Parser
-  This is a beta web app to upload and receive in CSV file for total FAILS per applicant. Please NOTE that no data is saved into any cloud platforms and it is at your discretion to save output file locally.
+  
   
   ### Step 1
   Log into [ERAS PDWS](https://auth.aamc.org/account/#/login?gotoUrl=http:%2F%2Fpdws.aamc.org%2Feras-pdws-web%2F). 
@@ -156,14 +158,11 @@ if choice == "USMLE/COMLEX":
     if status:
       st.warning(f'The following PDFs were deemed indeterminate: {status}')    
       
-  if st.button('Clear Uploaded File(s)', help='click twice to clear ALL'):
-    for key in st.session_state.keys():
-      
-      del st.session_state[key] 
+  if st.button('Clear Uploaded File(s)', help='Clears cache') and 'key' in st.session_state.keys():
+    st.session_state.pop('key')
+    st.experimental_rerun()
+    
 
-
-  
-  #st.session_state
 
 
 
