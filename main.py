@@ -140,7 +140,7 @@ if choice == "USMLE/COMLEX":
         st.markdown(f"Total applicants with 1 or more FAILED USMLE/COMLEX attempts: **{str(df.shape[0])}**")
     
     if status:
-      st.warning(f'The following PDFs were deemed indeterminate: {status}')    
+      st.warning(f'The following PDF(s) were deemed indeterminate: {status}')    
       
   if st.button('Clear Uploaded File(s)', help='Clears cache') and 'key' in st.session_state.keys():
     st.session_state.pop('key')
