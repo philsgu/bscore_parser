@@ -5,6 +5,7 @@ import pdfplumber as pf
 import time 
 import plotly.express as px
 from random import randint
+import streamlit_ext as ste
 
 
 choice = st.sidebar.selectbox("Please select", ("Home", "USMLE/COMLEX"))
@@ -130,7 +131,7 @@ if choice == "USMLE/COMLEX":
         usmle_histo.update_layout(title_x=0.5)
         st.plotly_chart(usmle_histo)
         
-        st.download_button(
+        ste.download_button(
           label='Download CSV file', 
           data = csv, 
           mime='text/csv', 
