@@ -8,6 +8,13 @@ from random import randint
 import streamlit_ext as ste
 
 
+tab1, tab2 = st.tabs("FAQs", "Upload/Download")
+
+tab1.subheader("FAQ")
+f"""
+### What does the Web App do? 
+Allows US Residency Programs to upload Board Score Report PDF(s) and receive a parsed CSV file output of any applicants' Fails
+"""
 
 choice = st.sidebar.selectbox("Please select", ("Home", "USMLE/COMLEX"))
 #add 'key' state for callback on file upload assignment
