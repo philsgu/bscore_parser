@@ -36,7 +36,7 @@ if choice == "Home":
   Please consider this as a tool to guage the program's applicant pool but NOT as means to determine final outcome to 
   interview and ranking decisions.
 
-  &#8594Select from the **left menu option** USMLE/COMLEX to parse PDF(s). 
+ Select from the **left menu option** USMLE/COMLEX to parse PDF(s). 
   #
   ### What does the Web App do? 
   Allows US Residency Programs to upload Board Score Report PDF(s) and receive a parsed CSV file output of any applicants' Fails
